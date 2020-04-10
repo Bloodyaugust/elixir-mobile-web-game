@@ -27,4 +27,20 @@ defmodule ElixirMobileWebGame.GameTest do
              |> Game.next_round()
              |> Game.next_round()
   end
+
+  test "end to end" do
+    game = Game.new()
+  
+    assert %Game{state: :pending, current_round: 0} = game
+
+    game = Game.start(game)
+    assert %Game{state: :started, current_round: 0} = game
+    assert game.start_time != nil
+
+    game = Game.next_round(game)
+    assert %Game{state: :started, current_round: 1} = game
+
+    game = Game.next_round(game)
+    assert %Game{state: :finished, current_round: 1} = game
+  end
 end
