@@ -30,7 +30,7 @@ defmodule ElixirMobileWebGame.GameTest do
 
   test "end to end" do
     game = Game.new()
-  
+
     assert %Game{state: :pending, current_round: 0} = game
 
     game = Game.start(game)
