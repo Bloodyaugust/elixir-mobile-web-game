@@ -6,7 +6,11 @@ defmodule ElixirMobileWebGameWeb.PageView do
       DynamicSupervisor.which_children(ElixirMobileWebGame.GameDynamicSupervisor),
       fn child_tuple ->
         {id, child, type, modules} = child_tuple
-        :sys.get_state(child).id
+
+        %{
+          state: inspect(ElixirMobileWebGame.GameGenserver.get_state(child)),
+          id: ElixirMobileWebGame.GameGenserver.get_state(child).id
+        }
       end
     )
   end

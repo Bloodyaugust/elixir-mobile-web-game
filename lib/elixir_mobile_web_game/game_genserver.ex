@@ -7,11 +7,16 @@ defmodule ElixirMobileWebGame.GameGenserver do
   def start_link() do
     id = Util.random_string(4)
     name = via_tuple(id)
+    ElixirMobileWebGameWeb.Endpoint.broadcast("game:all", "creating", %{body: id})
     GenServer.start_link(ElixirMobileWebGame.GameGenserver, Game.new(id), name: name)
   end
 
-  def get_state(game_id) do
+  def get_state(game_id) when is_bitstring(game_id) do
     GenServer.call(via_tuple(game_id), :get_state)
+  end
+
+  def get_state(game_genserver) do
+    GenServer.call(game_genserver, :get_state)
   end
 
   def start_game(game_id) do
