@@ -1,11 +1,11 @@
 defmodule ElixirMobileWebGame.Game do
-  defstruct [:current_round, :state, :start_time]
+  defstruct [:current_round, :id, :state, :start_time]
 
   @max_rounds 1
 
   # @game_states [:pending, :started, :finished]
 
-  def new(), do: %__MODULE__{state: :pending, current_round: 0}
+  def new(id), do: %__MODULE__{state: :pending, current_round: 0, id: id}
 
   def start(%__MODULE__{state: :pending} = game),
     do: %{game | state: :started, start_time: DateTime.utc_now()}

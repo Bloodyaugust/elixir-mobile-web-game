@@ -2,21 +2,24 @@ defmodule ElixirMobileWebGame.GameGenserver do
   use GenServer
 
   alias ElixirMobileWebGame.Game
+  alias ElixirMobileWebGame.Util
 
   def start_link() do
-    GenServer.start_link(ElixirMobileWebGame.GameGenserver, Game.new())
+    id = Util.random_string(4)
+    name = via_tuple(id)
+    GenServer.start_link(ElixirMobileWebGame.GameGenserver, Game.new(id), name: name)
   end
 
-  def get_state(pid) do
-    GenServer.call(pid, :get_state)
+  def get_state(game_id) do
+    GenServer.call(via_tuple(game_id), :get_state)
   end
 
-  def start_game(pid) do
-    GenServer.call(pid, :start)
+  def start_game(game_id) do
+    GenServer.call(via_tuple(game_id), :start)
   end
 
-  def next_round(pid) do
-    GenServer.call(pid, :next_round)
+  def next_round(game_id) do
+    GenServer.call(via_tuple(game_id), :next_round)
   end
 
   def init(game) do
@@ -35,5 +38,9 @@ defmodule ElixirMobileWebGame.GameGenserver do
   def handle_call(:next_round, _from, game) do
     game = Game.next_round(game)
     {:reply, game, game}
+  end
+
+  defp via_tuple(game_id) do
+    {:via, Registry, {Registry.Game, game_id}}
   end
 end

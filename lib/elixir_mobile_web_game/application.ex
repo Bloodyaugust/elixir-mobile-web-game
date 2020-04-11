@@ -11,15 +11,21 @@ defmodule ElixirMobileWebGame.Application do
       # Start the Ecto repository
       ElixirMobileWebGame.Repo,
       # Start the endpoint when the application starts
-      ElixirMobileWebGameWeb.Endpoint
+      ElixirMobileWebGameWeb.Endpoint,
       # Starts a worker by calling: ElixirMobileWebGame.Worker.start_link(arg)
       # {ElixirMobileWebGame.Worker, arg},
+      ElixirMobileWebGame.GameDynamicSupervisor,
+      {Registry, keys: :unique, name: Registry.Game}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: ElixirMobileWebGame.Supervisor]
     Supervisor.start_link(children, opts)
+
+    Enum.each(0..9, fn _ -> ElixirMobileWebGame.GameDynamicSupervisor.start_child() end)
+
+    {:ok, self()}
   end
 
   # Tell Phoenix to update the endpoint configuration

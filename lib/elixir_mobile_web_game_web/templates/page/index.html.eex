@@ -32,4 +32,9 @@
       </li>
     </ul>
   </article>
+  <ul>
+    <%= for game_id <- games() do %>
+      <li><%= game_id %></li>
+    <% end %>
+  </ul>
 </section>
