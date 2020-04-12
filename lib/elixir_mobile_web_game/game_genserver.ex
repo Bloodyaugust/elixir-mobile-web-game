@@ -20,11 +20,23 @@ defmodule ElixirMobileWebGame.GameGenserver do
   end
 
   def start_game(game_id) do
-    GenServer.call(via_tuple(game_id), :start)
+    result = GenServer.call(via_tuple(game_id), :start)
+
+    ElixirMobileWebGameWeb.Endpoint.broadcast("game:#{game_id}", "updated", %{
+      body: %{id: game_id, state: inspect(get_state(game_id))}
+    })
+
+    result
   end
 
   def next_round(game_id) do
-    GenServer.call(via_tuple(game_id), :next_round)
+    result = GenServer.call(via_tuple(game_id), :next_round)
+
+    ElixirMobileWebGameWeb.Endpoint.broadcast("game:#{game_id}", "updated", %{
+      body: %{id: game_id, state: inspect(get_state(game_id))}
+    })
+
+    result
   end
 
   def init(game) do

@@ -23,38 +23,86 @@ import socket from "./socket"
 
   const allGameChannel = socket.channel('game:all', {});
 
-  allGameChannel.on('creating', payload => {
-    console.log(payload);
-  });
+  function newButton(attributes) {
+    const newElement = document.createElement('input');
+    const typeAttribute = document.createAttribute('type');
+
+    typeAttribute.value = 'button';
+    newElement.setAttributeNode(typeAttribute);
+
+    attributes.forEach((attribute) => {
+      const newAttribute = document.createAttribute(attribute.type);
+
+      newAttribute.value = attribute.value;
+      newElement.setAttributeNode(newAttribute);
+    });
+
+    return newElement;
+  }
 
   allGameChannel.on('created', payload => {
-    let listItem = document.createElement('li');
-    listItem.innerText = payload.body;
+    console.log('created', payload)
+    const listItem = document.createElement('li');
+    const dataIDAttribute = document.createAttribute('data-id');
+    const newStartButton = newButton([
+      { type: 'class', value: 'start-game' },
+      { type: 'data-id', value: payload.body.id },
+      { type: 'value', value: 'Start Game' }
+    ]);
+    const newNextRoundButton = newButton([
+      { type: 'class', value: 'next-round' },
+      { type: 'data-id', value: payload.body.id },
+      { type: 'value', value: 'Next Round' }
+    ]);
+
+    listItem.childNodes[0].textContent = payload.body.description;
+
+    dataIDAttribute.value = payload.body.id;
+    listItem.setAttributeNode(dataIDAttribute)
+
+    listItem.appendChild(newStartButton);
+    listItem.appendChild(newNextRoundButton);
+
     gameList.appendChild(listItem);
+
+    listenToGame(payload.body.id);
   });
 
   allGameChannel.join()
-    .receive('ok', resp => { console.log('Joined successfully', resp) })
+    .receive('ok', resp => { console.log('Joined game:all successfully', resp) })
     .receive('error', resp => { console.log('Unable to join', resp) });
 
   createGameButton.addEventListener('click', () => {
     allGameChannel.push('create', { body: 'do it' });
   });
 
-  startGameButtons.forEach(button => {
-    button.addEventListener('click', event => {
-      const startGameChannel = socket.channel(`game:${event.target.dataset.id}`, {});
+  function listenToGame(gameID) {
+    const startGameButton = document.querySelector(`input.start-game[data-id="${gameID}"]`);
+    const nextRoundButton = document.querySelector(`input.next-round[data-id="${gameID}"]`);
+    const gameListItem = document.querySelector(`li[data-id="${gameID}"]`);
 
-      startGameChannel.on('started', payload => {
-        console.log('started', payload);
-      });
+    const gameChannel = socket.channel(`game:${gameID}`, {});
 
-      startGameChannel.join()
-        .receive('ok', resp => {
-          console.log('Joined successfully', resp);
-          startGameChannel.push(`start:${event.target.dataset.id}`, { body: 'do it' });
-        })
-        .receive('error', resp => { console.log('Unable to join', resp) });
+    gameChannel.on('updated', payload => {
+      console.log('updated', payload);
+      gameListItem.childNodes[0].textContent = payload.body.state;
     });
+
+    gameChannel.join()
+      .receive('ok', resp => {
+        console.log(`Joined game:${gameID} successfully`, resp);
+      })
+      .receive('error', resp => { console.log(`Unable to join game:${gameID}`, resp) });
+
+    startGameButton.addEventListener('click', () => {
+      gameChannel.push(`start:${gameID}`, { body: 'do it' });
+    });
+    nextRoundButton.addEventListener('click', () => {
+      gameChannel.push(`next_round:${gameID}`, { body: 'do it' });
+    });
+  }
+
+  startGameButtons.forEach(button => {
+    listenToGame(button.dataset.id);
   });
 })();

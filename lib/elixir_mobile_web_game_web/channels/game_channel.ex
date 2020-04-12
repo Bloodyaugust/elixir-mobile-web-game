@@ -13,23 +13,24 @@ defmodule ElixirMobileWebGameWeb.GameChannel do
     {:ok, game_genserver} = ElixirMobileWebGame.GameDynamicSupervisor.start_child()
 
     broadcast!(socket, "created", %{
-      body: inspect(ElixirMobileWebGame.GameGenserver.get_state(game_genserver))
-    })
-
-    {:noreply, socket}
-  end
-
-  def handle_in("creating", %{"body" => body}, socket) do
-    broadcast!(socket, "creating", %{
-      body: body
+      body: %{
+        description: inspect(ElixirMobileWebGame.GameGenserver.get_state(game_genserver)),
+        id: ElixirMobileWebGame.GameGenserver.get_state(game_genserver).id
+      }
     })
 
     {:noreply, socket}
   end
 
   def handle_in("start:" <> game_id, %{"body" => _body}, socket) do
-    broadcast!(socket, "started", %{
-      body: inspect(ElixirMobileWebGame.GameGenserver.start_game(game_id))
+    ElixirMobileWebGame.GameGenserver.start_game(game_id)
+
+    {:noreply, socket}
+  end
+
+  def handle_in("next_round:" <> game_id, %{"body" => _body}, socket) do
+    broadcast!(socket, "new-round", %{
+      body: inspect(ElixirMobileWebGame.GameGenserver.next_round(game_id))
     })
 
     {:noreply, socket}

@@ -2,7 +2,11 @@
   <input type="button" id="create-game" value="Create Game" />
   <ul id="game-list">
     <%= for game_map <- games() do %>
-      <li><%= game_map.state %><input class="start-game" type="button" value="Start Game" data-id="<%= game_map.id %>" /></li>
+      <li data-id="<%= game_map.id %>">
+        <%= game_map.state %>
+        <input class="start-game" type="button" value="Start Game" data-id="<%= game_map.id %>" />
+        <input class="next-round" type="button" value="Next Round" data-id="<%= game_map.id %>" />
+      </li>
     <% end %>
   </ul>
 </div>
