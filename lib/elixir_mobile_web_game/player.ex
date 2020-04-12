@@ -1,13 +1,15 @@
 defmodule ElixirMobileWebGame.Player do
-  defstruct [:score, :id, :state, :game]
+  defstruct [:score, :id, :state, :game_id]
+
+  alias ElixirMobileWebGame.GameGenserver
 
   # @player_states [:waiting, :finished]
 
-  def new(id, game),
+  def new(id, game_id),
     do: %__MODULE__{
       state: :waiting,
       score: 0,
-      game: game,
+      game_id: game_id,
       id: id
     }
 
@@ -17,7 +19,7 @@ defmodule ElixirMobileWebGame.Player do
       | state: :finished,
         score:
           player.score +
-            ElixirMobileWebGame.Game.get_score(player.game)
+            GameGenserver.get_score(player.game_id)
     }
   end
 
