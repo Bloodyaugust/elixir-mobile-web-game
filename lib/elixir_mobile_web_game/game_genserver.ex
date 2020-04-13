@@ -17,6 +17,10 @@ defmodule ElixirMobileWebGame.GameGenserver do
     GenServer.start_link(ElixirMobileWebGame.GameGenserver, Game.new(id), name: name)
   end
 
+  def click(game_id, player_id) when is_bitstring(game_id) do
+    GenServer.call(via_tuple(game_id), {:click, player_id})
+  end
+
   def register_player(game_id, player_id) when is_bitstring(game_id) do
     GenServer.call(via_tuple(game_id), {:register_player, player_id})
   end
@@ -63,6 +67,11 @@ defmodule ElixirMobileWebGame.GameGenserver do
   end
 
   def handle_call(:get_state, _from, game) do
+    {:reply, game, game}
+  end
+
+  def handle_call({:click, player_id}, _from, game) do
+    {_, game} = Game.player_click(game, player_id)
     {:reply, game, game}
   end
 

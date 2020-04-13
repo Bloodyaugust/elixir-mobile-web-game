@@ -1,5 +1,5 @@
 defmodule ElixirMobileWebGame.PlayerTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   alias ElixirMobileWebGame.GameGenserver
   alias ElixirMobileWebGame.Player
 
