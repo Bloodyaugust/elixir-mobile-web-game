@@ -1,7 +1,7 @@
-defmodule ElixirMobileWebGame.PlayerTest do
+defmodule ElixirMobileWebGame.Core.PlayerTest do
   use ExUnit.Case, async: false
-  alias ElixirMobileWebGame.GameGenserver
-  alias ElixirMobileWebGame.Player
+  alias ElixirMobileWebGame.Boundary.GameGenserver
+  alias ElixirMobileWebGame.Core.Player
 
   test "Player can calculate their score with a game object in the right state" do
     # Why/how is the Registry (Registry.Game) already started here?

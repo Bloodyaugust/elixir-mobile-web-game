@@ -3,13 +3,13 @@ defmodule ElixirMobileWebGameWeb.PageView do
 
   def games do
     Enum.map(
-      DynamicSupervisor.which_children(ElixirMobileWebGame.GameDynamicSupervisor),
+      DynamicSupervisor.which_children(ElixirMobileWebGame.Boundary.GameDynamicSupervisor),
       fn child_tuple ->
         {id, child, type, modules} = child_tuple
 
         %{
-          state: inspect(ElixirMobileWebGame.GameGenserver.get_state(child)),
-          id: ElixirMobileWebGame.GameGenserver.get_state(child).id
+          state: inspect(ElixirMobileWebGame.Boundary.GameGenserver.get_state(child)),
+          id: ElixirMobileWebGame.Boundary.GameGenserver.get_state(child).id
         }
       end
     )

@@ -1,9 +1,9 @@
-defmodule ElixirMobileWebGame.GameTest do
+defmodule ElixirMobileWebGame.Core.GameTest do
   use ExUnit.Case, async: false
   # Can also take , as: ModuleAliasName
-  alias ElixirMobileWebGame.Game
-  alias ElixirMobileWebGame.GameGenserver
-  alias ElixirMobileWebGame.Player
+  alias ElixirMobileWebGame.Core.Game
+  alias ElixirMobileWebGame.Boundary.GameGenserver
+  alias ElixirMobileWebGame.Core.Player
 
   test "end to end" do
     {:ok, _} = GameGenserver.start_link("abcd")

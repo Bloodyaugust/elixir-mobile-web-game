@@ -14,7 +14,7 @@ defmodule ElixirMobileWebGame.Application do
       ElixirMobileWebGameWeb.Endpoint,
       # Starts a worker by calling: ElixirMobileWebGame.Worker.start_link(arg)
       # {ElixirMobileWebGame.Worker, arg},
-      ElixirMobileWebGame.GameDynamicSupervisor,
+      ElixirMobileWebGame.Boundary.GameDynamicSupervisor,
       {Registry, keys: :unique, name: Registry.Game}
     ]
 
@@ -23,7 +23,7 @@ defmodule ElixirMobileWebGame.Application do
     opts = [strategy: :one_for_one, name: ElixirMobileWebGame.Supervisor]
     Supervisor.start_link(children, opts)
 
-    Enum.each(0..9, fn _ -> ElixirMobileWebGame.GameDynamicSupervisor.start_child() end)
+    Enum.each(0..9, fn _ -> ElixirMobileWebGame.Boundary.GameDynamicSupervisor.start_child() end)
 
     {:ok, self()}
   end

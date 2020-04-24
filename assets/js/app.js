@@ -55,7 +55,7 @@ import socket from "./socket"
       { type: 'value', value: 'Next Round' }
     ]);
 
-    listItem.childNodes[0].textContent = payload.body.description;
+    listItem.textContent = payload.body.description;
 
     dataIDAttribute.value = payload.body.id;
     listItem.setAttributeNode(dataIDAttribute)

@@ -1,7 +1,7 @@
-defmodule ElixirMobileWebGame.Player do
+defmodule ElixirMobileWebGame.Core.Player do
   defstruct [:score, :id, :state, :game_id]
 
-  alias ElixirMobileWebGame.GameGenserver
+  alias ElixirMobileWebGame.Boundary.GameGenserver
 
   # @player_states [:waiting, :finished]
 

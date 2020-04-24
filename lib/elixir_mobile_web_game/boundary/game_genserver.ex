@@ -1,20 +1,20 @@
-defmodule ElixirMobileWebGame.GameGenserver do
+defmodule ElixirMobileWebGame.Boundary.GameGenserver do
   use GenServer
 
-  alias ElixirMobileWebGame.Game
-  alias ElixirMobileWebGame.Util
+  alias ElixirMobileWebGame.Core.Game
+  alias ElixirMobileWebGame.Core.Util
 
   def start_link(id) when is_bitstring(id) do
     name = via_tuple(id)
     ElixirMobileWebGameWeb.Endpoint.broadcast("game:all", "creating", %{body: id})
-    GenServer.start_link(ElixirMobileWebGame.GameGenserver, Game.new(id), name: name)
+    GenServer.start_link(__MODULE__, Game.new(id), name: name)
   end
 
   def start_link() do
     id = Util.random_string(4)
     name = via_tuple(id)
     ElixirMobileWebGameWeb.Endpoint.broadcast("game:all", "creating", %{body: id})
-    GenServer.start_link(ElixirMobileWebGame.GameGenserver, Game.new(id), name: name)
+    GenServer.start_link(__MODULE__, Game.new(id), name: name)
   end
 
   def click(game_id, player_id) when is_bitstring(game_id) do

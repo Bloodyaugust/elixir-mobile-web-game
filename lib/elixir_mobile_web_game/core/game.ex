@@ -1,7 +1,7 @@
-defmodule ElixirMobileWebGame.Game do
+defmodule ElixirMobileWebGame.Core.Game do
   defstruct [:current_round, :players, :round_times, :id, :state, :start_time]
 
-  alias ElixirMobileWebGame.Player
+  alias ElixirMobileWebGame.Core.Player
 
   @max_rounds 2
 

@@ -1,7 +1,7 @@
-defmodule ElixirMobileWebGame.GameDynamicSupervisor do
+defmodule ElixirMobileWebGame.Boundary.GameDynamicSupervisor do
   use DynamicSupervisor
 
-  alias ElixirMobileWebGame.GameGenserver
+  alias ElixirMobileWebGame.Boundary.GameGenserver
 
   def start_link(init_arg) do
     DynamicSupervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
